@@ -372,7 +372,7 @@ public class DataEntryStatisticsController extends SimpleFormController {
 	}
 
 	private String fetchSpreadsheetPassword(HttpServletRequest request) {
-		String contextPath = request.getSession().getServletContext().getContextPath();
+		String contextPath = ((HttpServletRequest) request.getSession().getServletContext()).getContextPath();
 		if (contextPath == null || "".equals(contextPath)) {
 			contextPath = request.getContextPath();
 		}
