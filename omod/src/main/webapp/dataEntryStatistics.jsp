@@ -105,9 +105,6 @@
 				<td><spring:bind path="command.toDate">
 						<input type="text" name="${status.expression}" size="10"
 							value="${status.value}" id="endDate" />
-						<c:if test="${status.errorMessage != ''}">
-							<span class="error">${status.errorMessage}</span>
-						</c:if>
 					</spring:bind></td>
 			</tr>
 
@@ -151,7 +148,6 @@
 					value="<spring:message code="general.view"/>" />&nbsp;&nbsp; 
 					<td><input type="submit" name="downloadWithPassword" value="Download Protected Excel File " /></td>
 					<td><input type="submit" name="downloadWithoutPassword" value="Download Unprotected Excel File"></td>
-					
 			</tr>
 		</table>
 	</fieldset>
@@ -172,9 +168,5 @@
 	file="/moduleResources/dataentrystatistics/form-type.css" />
 <openmrs:htmlInclude
 	file="/moduleResources/dataentrystatistics/form-type.js" />
-
-
-
-
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>
