@@ -28,19 +28,16 @@
 	</extension>
 
 	<!-- Internationalization -->
-
-	<privilege>
-		<name>View Data Entry Statistics</name>
-		<description>Able to View Data Entry Statistics</description>
-	</privilege>
 	<messages>
 		<lang>en</lang>
-		<file>messages_en.properties</file>
+		<file>messages.properties</file>
 	</messages>
-
 	<messages>
 		<lang>pt</lang>
 		<file>messages_pt.properties</file>
 	</messages>
+
+	<!-- /Internationalization -->
+
 </module>
 
