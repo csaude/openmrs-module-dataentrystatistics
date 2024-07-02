@@ -13,10 +13,10 @@
 	<url>http://openmrs.org</url>
 
 	<scm>
-		<connection>scm:git:git@github.com:openmrs/openmrs-module-dataentrystatistics.git</connection>
-		<developerConnection>scm:git:git@github.com:openmrs/openmrs-module-dataentrystatistics.git</developerConnection>
-		<url>https://github.com/openmrs/openmrs-module-dataentrystatistics</url>
-		<tag>2.1.0</tag>
+		<connection>scm:git:https://github.com/csaude/openmrs-module-dataentrystatistics</connection>
+    		<developerConnection>scm:git:https://github.com/csaude/openmrs-module-dataentrystatistics</developerConnection>
+    		<url>https://github.com/csaude/openmrs-module-dataentrystatistics</url>
+    		<tag>HEAD</tag>
 	</scm>
 
 	<modules>
