@@ -13,11 +13,13 @@
  */
 package org.openmrs.module.dataentrystatistics.web.controller;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -64,8 +66,10 @@ public class DataEntryStatisticsController extends SimpleFormController {
 			throws Exception {
 		super.initBinder(request, binder);
 
-		binder.registerCustomEditor(java.util.Date.class,
-				new CustomDateEditor(OpenmrsUtil.getDateFormat(Context.getLocale()), true, 10));
+		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		CustomDateEditor l = new CustomDateEditor(df, true);
+		binder.registerCustomEditor(Date.class, l);
+		binder.registerCustomEditor(java.util.Date.class, l);
 
 	}
 
@@ -330,7 +334,7 @@ public class DataEntryStatisticsController extends SimpleFormController {
 
 		if (request.getParameterMap().containsKey("downloadWithPassword")) {
 			Biff8EncryptionKey.setCurrentUserPassword(fetchSpreadsheetPassword(request));
-			
+
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application/vnd.ms-excel");
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + generateSpreadsheetFilename() + "\"");
@@ -388,10 +392,7 @@ public class DataEntryStatisticsController extends SimpleFormController {
 	}
 
 	private String fetchSpreadsheetPassword(HttpServletRequest request) {
-		String contextPath = request.getSession().getServletContext().getContextPath();
-		if (contextPath == null || "".equals(contextPath)) {
-			contextPath = request.getContextPath();
-		}
+		String contextPath = request.getContextPath();
 
 		if (contextPath != null && contextPath.startsWith("/")) {
 			contextPath = contextPath.substring(1);

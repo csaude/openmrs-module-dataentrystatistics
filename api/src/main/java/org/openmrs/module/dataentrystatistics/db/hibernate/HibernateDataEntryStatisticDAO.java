@@ -74,8 +74,13 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 
 		final String hql = "SELECT DATE(o.dateCreated), COUNT(o.obsId), c.username, l.name FROM Obs o "
 				+ "INNER JOIN o.creator c INNER JOIN o.location l "
-				+ "WHERE DATE(o.dateCreated) BETWEEN :fromDate AND :toDate AND l.locationId =:location AND c.username IS NOT null "
-				+ "AND o.voided = :voided GROUP BY DATE(o.dateCreated), c.username ORDER BY DATE(o.dateCreated) ASC";
+				+ "WHERE DATE(o.dateCreated) BETWEEN :fromDate AND :toDate "
+				+ "AND l.locationId =:location "
+				+ "AND c.username IS NOT null "
+				+ "AND o.voided = :voided "
+				+ "AND c.retired =:retired "
+				+ "GROUP BY DATE(o.dateCreated), c.username "
+				+ "ORDER BY DATE(o.dateCreated) ASC ";
 
 		final Query query = this.getCurrentSession().createQuery(hql);
 
@@ -83,6 +88,8 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 		query.setParameter("toDate", toDate);
 		query.setParameter("location", location);
 		query.setParameter("voided", false);
+		query.setParameter("retired", false);
+
 
 		final List<Object[]> list = query.list();
 
@@ -126,15 +133,23 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 			final Integer location) {
 
 		final String hql = "SELECT f.name, c.username, COUNT(DISTINCT e.encounterId), COUNT(o.obsId),  l.name   FROM  Obs o "
-				+ "INNER JOIN o.encounter e INNER JOIN e.form f INNER JOIN e.creator c  INNER JOIN e.location l "
-				+ "WHERE DATE(o.dateCreated) >= :fromDate AND DATE(o.dateCreated) <= :toDate AND  l.locationId =:location AND c.username IS NOT null "
-				+ "AND o.voided = :voided GROUP BY f.name, c.username";
+				+ "INNER JOIN o.encounter e INNER JOIN e.form f INNER JOIN e.creator c  "
+				+ "INNER JOIN e.location l "
+				+ "WHERE DATE(o.dateCreated) >= :fromDate AND DATE(o.dateCreated) <= :toDate "
+				+ "AND  l.locationId =:location "
+				+ "AND c.username IS NOT null "
+				+ "AND o.voided = :voided "
+				+ "AND e.voided = :voided_enc "
+				+ "AND c.retired =:retired "
+				+ "GROUP BY f.name, c.username";
 
 		final Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter("fromDate", fromDate);
 		query.setParameter("toDate", toDate);
 		query.setParameter("location", location);
 		query.setParameter("voided", false);
+		query.setParameter("voided_enc", false);
+		query.setParameter("retired", false);
 
 		final List<Object[]> list = query.list();
 
@@ -165,8 +180,11 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 		final String hql = "SELECT c.username, l.name, MONTH(o.dateCreated), COUNT(o.obsId) FROM Obs o "
 				+ "INNER JOIN o.creator c INNER JOIN o.location l "
 				+ "WHERE DATE(o.dateCreated) >= :fromDate AND DATE(o.dateCreated) <= :toDate "
-				+ "AND l.locationId =:location AND c.username IS NOT NULL "
-				+ "AND o.voided = :voided GROUP BY MONTH(o.dateCreated), c.username "
+				+ "AND l.locationId =:location "
+				+ "AND c.username IS NOT NULL "
+				+ "AND o.voided = :voided "
+				+ "AND c.retired =:retired "
+				+ "GROUP BY MONTH(o.dateCreated), c.username "
 				+ "ORDER BY MONTH(o.dateCreated), c.username ASC";
 
 		final Query query = this.getCurrentSession().createQuery(hql);
@@ -174,6 +192,7 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 		query.setParameter("toDate", toDate);
 		query.setParameter("location", location);
 		query.setParameter("voided", false);
+		query.setParameter("retired", false);
 
 		final List<Object[]> list = query.list();
 
@@ -201,13 +220,18 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 
 		final String hql = "SELECT COUNT(o.obsId), c.username FROM  Obs o "
 				+ "INNER JOIN o.creator c INNER JOIN o.location l WHERE "
-				+ "DATE(o.dateCreated) >= :fromDate AND DATE(o.dateCreated) <= :toDate AND l.locationId =:location AND c.username IS NOT null "
+				+ "DATE(o.dateCreated) >= :fromDate AND DATE(o.dateCreated) <= :toDate "
+				+ "AND l.locationId =:location "
+				+ "AND c.username IS NOT null "
+				+ "AND c.retired =:retired "
 				+ "GROUP BY c.username";
 
 		final Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter("fromDate", fromDate);
 		query.setParameter("toDate", toDate);
 		query.setParameter("location", location);
+		query.setParameter("retired", false);
+
 
 		final List<Object[]> list = query.list();
 
@@ -230,14 +254,19 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 			final Integer location) {
 		final String hql = "SELECT DATE(o.dateCreated), COUNT(o.obsId), c.username,  l.parentLocation FROM Obs o "
 				+ "INNER JOIN o.creator c INNER JOIN o.location l "
-				+ "WHERE DATE(o.dateCreated) BETWEEN :fromDate AND :toDate AND o.voided = :voided AND c.username IS NOT null "
-				+ "GROUP BY DATE(o.dateCreated), c.username " + "ORDER BY DATE(o.dateCreated) ASC ";
+				+ "WHERE DATE(o.dateCreated) BETWEEN :fromDate AND :toDate "
+				+ "AND o.voided = :voided "
+				+ "AND c.username IS NOT null "
+				+ "AND c.retired =:retired "
+				+ "GROUP BY DATE(o.dateCreated), c.username "
+				+ "ORDER BY DATE(o.dateCreated) ASC ";
 
 		final Query query = this.getCurrentSession().createQuery(hql);
 
 		query.setParameter("fromDate", fromDate);
 		query.setParameter("toDate", toDate);
 		query.setParameter("voided", false);
+		query.setParameter("retired", false);
 
 		@SuppressWarnings("unchecked")
 		final List<Object[]> list = query.list();
@@ -265,13 +294,19 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 			final Integer location) {
 
 		final String hql = "SELECT f.name, c.username, COUNT(DISTINCT e.encounterId), COUNT(o.obsId),  l.parentLocation FROM  Obs o "
-				+ "INNER JOIN o.encounter e INNER JOIN e.form f INNER JOIN e.creator c  INNER JOIN e.location l "
-				+ "WHERE DATE(e.dateCreated) >= :fromDate AND DATE(e.dateCreated) <= :toDate AND e.voided = :voided AND c.username IS NOT null "
+				+ "INNER JOIN o.encounter e INNER JOIN e.form f "
+				+ "INNER JOIN e.creator c  INNER JOIN e.location l "
+				+ "WHERE DATE(e.dateCreated) >= :fromDate AND DATE(e.dateCreated) <= :toDate "
+				+ "AND e.voided = :voided "
+				+ "AND c.retired =:retired "
+				+ "AND c.username IS NOT null "
 				+ "GROUP BY f.name, c.username";
 		final Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter("fromDate", fromDate);
 		query.setParameter("toDate", toDate);
 		query.setParameter("voided", false);
+		query.setParameter("retired", false);
+
 
 		final List<Object[]> list = query.list();
 		final ReportData<UserObsByFormType> reportData = new ReportData<UserObsByFormType>(null, null, null, fromDate,
@@ -298,14 +333,18 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 
 		final String hql = "SELECT c.username,  l.parentLocation, MONTH(o.dateCreated), COUNT(o.obsId) FROM Obs o "
 				+ "INNER JOIN o.creator c INNER JOIN o.location l "
-				+ "WHERE DATE(o.dateCreated) >= :fromDate AND DATE(o.dateCreated) <= :toDate  AND c.username IS NOT NULL "
-				+ "AND o.voided = :voided GROUP BY MONTH(o.dateCreated), c.username "
+				+ "WHERE DATE(o.dateCreated) >= :fromDate AND DATE(o.dateCreated) <= :toDate  "
+				+ "AND c.username IS NOT NULL "
+				+ "AND o.voided = :voided "
+				+ "AND c.retired =:retired "
+				+ "GROUP BY MONTH(o.dateCreated), c.username "
 				+ "ORDER BY MONTH(o.dateCreated), c.username ASC";
 
 		final Query query = this.getCurrentSession().createQuery(hql);
 		query.setParameter("fromDate", fromDate);
 		query.setParameter("toDate", toDate);
 		query.setParameter("voided", false);
+		query.setParameter("retired", false);
 
 		@SuppressWarnings("unchecked")
 		final List<Object[]> list = query.list();
@@ -499,7 +538,10 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 	public ReportData<UserObsLocation> countObsPerUSerALocation(Date fromDate, Date toDate) {
 		final String hql = "SELECT l.name, COUNT(o.obsId), c.username FROM Obs o "
 				+ "INNER JOIN o.creator c INNER JOIN o.location l "
-				+ "WHERE DATE(o.dateCreated) BETWEEN :fromDate AND :toDate AND o.voided = :voided AND c.username IS NOT null "
+				+ "WHERE DATE(o.dateCreated) BETWEEN :fromDate AND :toDate "
+				+ "AND o.voided = :voided "
+				+ "AND c.retired =:retired "
+				+ "AND c.username IS NOT null "
 				+ "GROUP BY l.name, c.username " + "ORDER BY l.name ";
 
 		final Query query = this.getCurrentSession().createQuery(hql);
@@ -507,6 +549,8 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 		query.setParameter("fromDate", fromDate);
 		query.setParameter("toDate", toDate);
 		query.setParameter("voided", false);
+		query.setParameter("retired", false);
+
 
 		@SuppressWarnings("unchecked")
 		final List<Object[]> list = query.list();
