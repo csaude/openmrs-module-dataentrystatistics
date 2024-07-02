@@ -139,6 +139,7 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 				+ "AND  l.locationId =:location "
 				+ "AND c.username IS NOT null "
 				+ "AND o.voided = :voided "
+				+ "AND e.voided = :voided_enc "
 				+ "AND c.retired =:retired "
 				+ "GROUP BY f.name, c.username";
 
@@ -147,6 +148,7 @@ public class HibernateDataEntryStatisticDAO implements DataEntryStatisticDAO {
 		query.setParameter("toDate", toDate);
 		query.setParameter("location", location);
 		query.setParameter("voided", false);
+		query.setParameter("voided_enc", false);
 		query.setParameter("retired", false);
 
 		final List<Object[]> list = query.list();

@@ -13,11 +13,13 @@
  */
 package org.openmrs.module.dataentrystatistics.web.controller;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -64,8 +66,10 @@ public class DataEntryStatisticsController extends SimpleFormController {
 			throws Exception {
 		super.initBinder(request, binder);
 
-		binder.registerCustomEditor(java.util.Date.class,
-				new CustomDateEditor(OpenmrsUtil.getDateFormat(Context.getLocale()), true, 10));
+		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		CustomDateEditor l = new CustomDateEditor(df, true);
+		binder.registerCustomEditor(Date.class, l);
+		binder.registerCustomEditor(java.util.Date.class, l);
 
 	}
 
