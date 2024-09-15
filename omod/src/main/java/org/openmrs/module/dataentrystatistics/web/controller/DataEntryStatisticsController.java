@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -70,6 +70,16 @@ public class DataEntryStatisticsController extends SimpleFormController {
 		CustomDateEditor l = new CustomDateEditor(df, true);
 		binder.registerCustomEditor(Date.class, l);
 		binder.registerCustomEditor(java.util.Date.class, l);
+
+		Set<Role> userRoles = Context.getAuthenticatedUser().getRoles();
+		boolean isMAOfficial = false;
+		for (Role role : userRoles) {
+			if ("Oficial Distrital de M&A".equals(role.getRole())) {
+				isMAOfficial = true;
+				break;
+			}
+		}
+		request.setAttribute("isMAOfficial", isMAOfficial);
 
 	}
 
