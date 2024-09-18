@@ -145,9 +145,13 @@
 			<tr>
 				<td></td>
 				<td><input type="submit" name="view"
-					value="<spring:message code="general.view"/>" />&nbsp;&nbsp; 
-					<td><input type="submit" name="downloadWithPassword" value="Download Protected Excel File " /></td>
-					<td><input type="submit" name="downloadWithoutPassword" value="Download Unprotected Excel File"></td>
+					value="<spring:message code="general.view"/>" />&nbsp;&nbsp;
+				<td><input type="submit" name="downloadWithPassword"
+					value="Download Protected Excel File " /></td>
+				<td><c:if test="${isMAOfficial eq true}">
+						<input type="submit" name="downloadWithoutPassword"
+							value="Download Unprotected Excel File">
+					</c:if></td>
 			</tr>
 		</table>
 	</fieldset>
