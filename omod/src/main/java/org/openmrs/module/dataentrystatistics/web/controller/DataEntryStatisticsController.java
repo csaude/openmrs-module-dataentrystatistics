@@ -16,6 +16,7 @@ package org.openmrs.module.dataentrystatistics.web.controller;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -61,6 +62,9 @@ public class DataEntryStatisticsController extends SimpleFormController {
 	private EntryObject entryObject;
 	private DataEntryStatisticService dataEntryStatisticService;
 
+	private String UUD_MI_COORDINATOR_ROLE_EN = "e2f0b0fe-1d5f-11e0-b929-000c29ad1d07";
+	private String UUD_MI_COORDINATOR_ROLE_PT = "a063eaee-b7b0-4c35-8dc7-2bc3568a226a";
+
 	@Override
 	protected void initBinder(final HttpServletRequest request, final ServletRequestDataBinder binder)
 			throws Exception {
@@ -74,13 +78,12 @@ public class DataEntryStatisticsController extends SimpleFormController {
 		Set<Role> userRoles = Context.getAuthenticatedUser().getRoles();
 		boolean isMAOfficial = false;
 		for (Role role : userRoles) {
-			if ("Oficial Distrital de M&A".equals(role.getRole())) {
+			if (Arrays.asList(UUD_MI_COORDINATOR_ROLE_EN, UUD_MI_COORDINATOR_ROLE_PT).contains(role.getUuid())) {
 				isMAOfficial = true;
 				break;
 			}
 		}
 		request.setAttribute("isMAOfficial", isMAOfficial);
-
 	}
 
 	@Override
